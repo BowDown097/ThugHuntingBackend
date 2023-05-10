@@ -9,14 +9,15 @@ int num_entries(const char* path)
     if ((d = opendir(path)) == NULL)
         return -1;
 
-    char* buf = malloc(strlen(path) + 1024);
+    size_t buf_sz = strlen(path) + 1024;
+    char* buf = malloc(buf_sz);
     struct dirent* ds;
     while ((ds = readdir(d)) != NULL)
     {
         if (strcmp(ds->d_name, ".") == 0 || strstr(ds->d_name, "./") != NULL)
             continue;
 
-        snprintf(buf, sizeof(buf), "%s/%s", path, ds->d_name);
+        snprintf(buf, buf_sz, "%s/%s", path, ds->d_name);
 
         struct stat st;
         stat(buf, &st);
@@ -48,7 +49,8 @@ void thuggallery_random_fn(struct mg_connection* c, struct mg_http_message* hm)
         return;
     }
 
-    char* buf = malloc(strlen(THUG_PATH) + 1024);
+    size_t buf_sz = strlen(THUG_PATH) + 1024;
+    char* buf = malloc(buf_sz);
     struct dirent* ds;
     int i = 0;
 
@@ -57,7 +59,7 @@ void thuggallery_random_fn(struct mg_connection* c, struct mg_http_message* hm)
         if (strcmp(ds->d_name, ".") == 0 || strstr(ds->d_name, "./") != NULL)
             continue;
 
-        snprintf(buf, sizeof(buf), "%s/%s", THUG_PATH, ds->d_name);
+        snprintf(buf, buf_sz, "%s/%s", THUG_PATH, ds->d_name);
 
         struct stat st;
         stat(buf, &st);
